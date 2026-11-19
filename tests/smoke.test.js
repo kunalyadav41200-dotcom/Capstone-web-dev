@@ -1,0 +1,3 @@
+const test=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs');const path=require('node:path');
+test('required project files exist',()=>{for(const file of ['src/server.js','src/routes/index.js','src/models/Product.js','README.md','docs/postman_collection.json'])assert.ok(fs.existsSync(path.join(__dirname,'..',file)),`${file} should exist`);});
+test('Postman collection JSON parses',()=>{const c=JSON.parse(fs.readFileSync(path.join(__dirname,'..','docs/postman_collection.json'),'utf8'));assert.equal(c.info.name,'E-Commerce Inventory Capstone API');assert.ok(c.item.length>=10);});

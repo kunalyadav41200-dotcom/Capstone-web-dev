@@ -1,0 +1,3 @@
+const jwt=require('jsonwebtoken'); const User=require('../models/User'); const AppError=require('../utils/AppError');
+exports.protect=async(req,res,next)=>{try{const h=req.headers.authorization;if(!h||!h.startsWith('Bearer '))throw new AppError('Authentication token required',401);const payload=jwt.verify(h.slice(7),process.env.JWT_ACCESS_SECRET);const user=await User.findById(payload.sub);if(!user||!user.isActive)throw new AppError('User account unavailable',401);req.user=user;next();}catch(e){next(e instanceof AppError?e:new AppError('Invalid or expired access token',401));}};
+exports.allowRoles=(...roles)=>(req,res,next)=>roles.includes(req.user.role)?next():next(new AppError('Insufficient permissions',403));
